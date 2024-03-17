@@ -94,5 +94,24 @@ describe Rufus::Scheduler::AtJob do
       expect(job.next_times(3)).to eq([])
     end
   end
+
+  describe '#next_times_until' do
+
+    it 'returns the next times until the given time' do
+
+      job = @scheduler.schedule_at Time.now + 1 do; end
+
+      expect(job.next_times_until(Time.now + 3)).to eq([ job.next_time ])
+    end
+
+    it 'returns an empty array if it already triggered' do
+      
+      job = @scheduler.schedule_at Time.now + 0.001 do; end
+
+      sleep 0.350
+
+      expect(job.next_times_until(Time.now + 3)).to eq([])
+    end
+  end
 end
 

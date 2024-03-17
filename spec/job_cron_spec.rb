@@ -213,6 +213,36 @@ describe Rufus::Scheduler::CronJob do
     end
   end
 
+  describe '#next_times_until' do
+
+    it 'returns the next times until the given time' do
+
+      job = @scheduler.schedule_cron '* * * * *' do; end
+
+      times =
+        3.times.inject([ job.next_time ]) { |a|
+          a << job.next_time_from(a.last)
+          a }
+
+      expect(job.next_times_until(times.last)).to eq(times)
+    end
+
+    it 'takes first_at/in into account' do
+
+      job = @scheduler.schedule_cron '* * * * * *', first_in: '3s' do; end
+
+      times =
+        2.times.inject([ job.next_time ]) { |a|
+          a << job.next_time_from(a.last)
+          a }
+
+      expect(job.next_times_until(times.last)).to eq(times)
+
+      expect(times.first).to be_between(Time.now + 2.5, Time.now + 3.5)
+    end
+  end
+
+
   describe '#resume' do
 
     context 'discard_past: true' do

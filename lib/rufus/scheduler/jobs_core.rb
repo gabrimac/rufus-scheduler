@@ -198,6 +198,10 @@ class Rufus::Scheduler::Job
     next_time ? [ next_time ] : []
   end
 
+  def next_times_until(datetime)
+    next_times(1)
+  end
+
   # Calls the callable (usually a block) wrapped in this Job instance.
   #
   # Warning: error rescueing is the responsibity of the caller.

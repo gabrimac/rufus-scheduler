@@ -147,6 +147,18 @@ class Rufus::Scheduler::RepeatJob < Rufus::Scheduler::Job
       a << next_time_from(a.last)
       a }
   end
+
+  def next_times_until(datetime)
+    next_times = [next_time]
+
+    loop do
+      break if next_times.last >= datetime
+
+      next_times << next_time_from(next_times.last)
+    end
+
+    next_times
+  end
 end
 
 #
